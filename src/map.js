@@ -29,7 +29,8 @@ class Map extends Component {
             countries: [],
             center: [0,0],
             zoom: 1,
-            input: ""
+            input: "",
+            isSelected: "",
         }
     
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -64,7 +65,8 @@ class Map extends Component {
         event.preventDefault()
         const {
             input,
-            countries
+            countries,
+            geographies
         } = this.state
 
         let indexNo = _.findIndex(countries, function(o) {
@@ -74,7 +76,8 @@ class Map extends Component {
         console.log(indexNo)
         this.setState({
             center: countries[indexNo].coordinates,
-            zoom: 3
+            zoom: 1,
+            isSelected: countries[indexNo].iso3
         })
         
     }
@@ -102,21 +105,24 @@ class Map extends Component {
                     <Geographies geography={geographies} disableOptimization>
                     {(geographies, projection) => 
                         geographies.map((geography, i) => {
+                            
+                      const isSelected = this.state.isSelected === geography.properties.ISO_A3
+            
                             return (
                                 <Geography
-                                    key={i}
+                                    key={geography.properties.ISO_A3 + i}
                                     round
                                     geography={geography}
                                     projection={projection}
                                     style={{
                                         default: {
-                                        fill: "#eceff1",
+                                        fill: isSelected ? "#FF5722" : "#ECEFF1",
                                         stroke: "#607D8B",
                                         strokeWidth: 0.75,
                                         outline: "none",
                                         },
                                         hover: {
-                                        fill: "#ff8000",
+                                        fill: isSelected ? "#E64A19" : "#607D8B",
                                         stroke: "#607D8B",
                                         strokeWidth: 0.75,
                                         outline: "none",
@@ -145,4 +151,3 @@ class Map extends Component {
 export default Map
 
 
-// test
